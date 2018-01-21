@@ -1,5 +1,9 @@
 import web  
-          
+import sys
+sys.path.append(r'get_data/')
+import score
+from pyecharts import Page, Gauge
+
 urls = (  
     '/index', 'index',  
     '/blog/\d+', 'blog',  
@@ -27,10 +31,14 @@ class blog:
         else:
             if data['bt_type'] == "bt1":
                 print "data: ", data
+                stu_id = data['id']
+                #get_data file func
+                gauge = score.get_score_data(stu_id)
 
                 #create Echarts file func
-                
-                return getid(data['id'])
+                create_echarts(gauge).render()
+
+                return getid(stu_id)
             elif data['bt_type'] == "bt2":
                 return open(r'render.html').read()
 
@@ -38,7 +46,7 @@ class blog:
 find student's info from id.csv
 '''
 def getid(name):
-    with open('/home/bob/Desktop/web/result.csv') as f:
+    with open('result.csv') as f:
         list_id = f.readlines()
         list_stu_id = [stu_id.strip().split(',') for stu_id in list_id]
         print "*******************"
@@ -65,10 +73,18 @@ get data with ID
 
 '''
 create Echarts file
-
-def create_echarts():
+'''
+def create_echarts(gauge):
     page = Page()
 
+
+
+    charts  = Gauge("Rank")
+    charts.add("Student Rank", "Rank", gauge[1], scale_range=[0, gauge[1]], is_legend_show=False)
+    page.add(charts)
+
+    return page
+'''
     charts = Bar("Bar chart", "precipitation and evaporation one year")
     charts.add("precipitation", attr, v1, mark_line=["average"], mark_point=["max", "min"])
     page.add(charts)
@@ -82,9 +98,9 @@ def create_echarts():
     charts = Line("pie chart", "test pie")
     charts.add("pie data", attr, v1)
     page.add(charts)
-    return page
-#create_charts().render()
 '''
+    
+#create_charts().render()
 
 if __name__ == "__main__":
     app.run()
