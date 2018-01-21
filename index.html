@@ -1,0 +1,32 @@
+  
+<html>
+    <head> 
+    <meta charset="UTF-8"> 
+        <title>hello</title>  
+    </head>  
+    <body>  
+        <div style="position:absolute;z-index:-1;width:100%;height:100%;"> 
+        <img src="http://i9.qhimg.com/t01c2e2c84d0096eac5.jpg" width="100%" height="100%" />
+    </div>
+    <h1 style = "text-align : center;" >
+    <font color = "#FFF00">
+    大学生助学金预测系统
+    </font> 
+    </h1>
+        
+        <form style = "text-align : center;" action="/blog/123" method="POST">  
+            <input type="text" name="bt_type" value="bt1" id="bttype" hidden>
+            <input type="text" name="id" value=""/>  
+            <input type="submit" name="search" value="查看" onclick=set_text("bt1")>  
+            <input type="submit" name="commit" value="详细信息可视化" onclick=set_text("bt2")>   
+        <script>  
+            function set_text(text){            
+                document.getElementById("bttype").setAttribute('value',text);
+            }  
+            function show_text(color){  
+                alert(color);
+            }
+        </script> 
+    </body>  
+
+</html> 
