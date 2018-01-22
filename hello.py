@@ -31,7 +31,7 @@ class blog:
         else:
             if data['bt_type'] == "bt1":
                 print "data: ", data
-                stu_id = int(data['id'])
+                stu_id = int(data['id']) #change to int
                 print "type is :", type(data['id'])
                 #get_data file func
                 v1, v2 = score.get_score_data(stu_id)
