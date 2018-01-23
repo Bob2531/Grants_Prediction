@@ -16,3 +16,4 @@ def change(values):
         new_value = round(value, 2)
         new_values.append(new_value)
     return new_values
+    

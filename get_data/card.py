@@ -21,7 +21,7 @@ def create_each_list():
 
 def type_mapping(chinese):
     if chinese == "图书馆":
-        return "labrary"
+        return "library"
     elif chinese == "校医院":
         return "hospital"
     elif chinese == "超市":
@@ -31,7 +31,7 @@ def type_mapping(chinese):
     elif chinese == "食堂":
         return "canteen"
     elif chinese == "洗衣房":
-        return "landry"
+        return "washer"
     elif chinese == "其他":
         return "other"
     elif chinese == "教务处":
@@ -132,12 +132,70 @@ def all_month(stu_id):
                         pay_sum[consume_name] += float(info[5])
                     else:
                         pay_sum[consume_name] = float(info[5])
-        labels = []#define labels with list
-        values = []#define values with list
-        for label, value in pay_sum.iteritems():
-            labels.append(label)
-            values.append(value)
-            
-        values = change2.change(values)#change format items in values
+            if year == 2014:
+                for amonth in range(1, 9):
+                    consume_name = type_mapping(consume_type)
+                    if consume_name in pay_sum:
+                        pay_sum[consume_name] += float(info[5])
+                    else:
+                        pay_sum[consume_name] = float(info[5])
+        labels, values = separate(pay_sum)
+        #values = change2.change(values)#change format items in values
     return [labels, values]
 
+'''
+parameter: a dict
+func: separate a dict into tow list
+return tow list which are labels_list and values_list
+'''
+def separate(dic):
+    labels = []#define labels with list
+    values = []#define values with list
+    for label, value in dic.iteritems():
+        labels.append(label)
+        values.append(value)
+    values = change2.change(values)
+    return labels, values
+
+'''
+parameter student's id
+func: get the monthly sum of consume
+return a list like this:
+[   [1, 2604.4]
+    [2, 853.44]
+    [3, 4762.64]
+    [4, 6302.4]
+    [5, 4007.04]
+    [6, 3900.0]
+    [7, 1865.6]
+    [8, 612.96]
+    [9, 1884.8]
+    [10, 1626.24]
+    [11, 1989.6]
+    [12, 1707.48] ]
+'''
+def month_sum(stu_id):
+    pre_list = each_month(stu_id)
+    for month in pre_list:
+        label, value = separate(month[1])
+        month[1] = round(sum(value), 2)
+    return pre_list
+
+'''
+pre_list = month_sum(22)
+print pre_list
+'''    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
