@@ -5,9 +5,6 @@ Created on Sun Jan 21 21:20:59 2018
 
 @author: hadoop
 """
-
-
-
 def get_score_data(stu_id):
     with open('data/score_train.txt', 'r') as f:
         lines = f.readlines()
@@ -26,6 +23,7 @@ def get_score_data(stu_id):
             info = line.strip().split(',')
             if stu_faculty == int(info[1]):
                 faculty_rank.append(int(info[2]))
+
         faculty_rank.sort()
         try:
             max_rank = faculty_rank[-1]
@@ -41,5 +39,5 @@ a, b= get_score_data(22)
 print a, b
 '''
 
-
-        
+#a, b = get_score_data(0)    
+#print a, b

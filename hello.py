@@ -1,8 +1,8 @@
 import web  
 import sys
 sys.path.append(r'get_data/')
-import score
-from pyecharts import Page, Gauge
+import score, card
+from pyecharts import Page, Gauge, Funnel
 
 urls = (  
     '/index', 'index',  
@@ -31,16 +31,16 @@ class blog:
         else:
             if data['bt_type'] == "bt1":
                 print "data: ", data
-                stu_id = int(data['id']) #change to int
+                stu_id = int(data['id']) #change to
                 print "type is :", type(data['id'])
                 #get_data file func
-                v1, v2 = score.get_score_data(stu_id)
-                
+                guage = score.get_score_data(stu_id)
+                funnel = card.all_month(stu_id)
                 print "------------------"
-                print v1, v2
+                print guage
                 print "------------------"
                 #create Echarts file func
-                create_echarts(v1, v2).render()
+                create_echarts(guage, funnel).render()
 
                 return getid(stu_id)
             elif data['bt_type'] == "bt2":
@@ -78,15 +78,21 @@ get data with ID
 '''
 create Echarts file
 '''
-def create_echarts(n1, n2):
+def create_echarts(gauge, funnel):
     page = Page()
 
 
 
-    charts  = Gauge("Rank")
-    charts.add("Student Rank", "Rank", n1, scale_range=[0, n2], is_legend_show=False)
+    charts  = Gauge("Student Rank", title_pos='center')
+    charts.add("", "Rank in Faculty", gauge[0], scale_range=[0, gauge[1]], 
+               is_legend_show=True)
     page.add(charts)
-
+    
+    charts = Funnel("Student's consume infomation", title_pos='center')
+    charts.add("Ways", funnel[0], funnel[1], is_label_show=True, 
+               label_pos='outside', legend_pos='left',
+               legend_orient='vertical')
+    page.add(charts)
     return page
 '''
     charts = Bar("Bar chart", "precipitation and evaporation one year")
