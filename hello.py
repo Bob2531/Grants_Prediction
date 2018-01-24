@@ -1,8 +1,8 @@
 import web  
 import sys
 sys.path.append(r'get_data/')
-import score, card, change2
-from pyecharts import Page, Timeline, Style, Scatter, Gauge, Funnel, Bar, Line
+import score, card, change2, borrow
+from pyecharts import Page, Timeline, Style, Scatter, Gauge, Funnel, Bar, Line, Pie
 
 urls = (  
     '/index', 'index',  
@@ -38,14 +38,16 @@ class blog:
                 funnel = card.all_month(stu_id)
                 bar_12month = card.month_sum(stu_id)
                 bar_eachmonth = card.each_month(stu_id)
+                pie = borrow.bookname(stu_id)
                 print "------------------"
-                print guage , funnel, bar_12month, bar_eachmonth
+                print guage ,funnel, bar_12month, bar_eachmonth, pie
                 print "------------------"
                 #create Echarts file func
                 create_echarts(guage, 
                                funnel, 
                                bar_12month,
-                               bar_eachmonth).render()
+                               bar_eachmonth,
+                               pie).render()
 
                 return getid(stu_id)
             elif data['bt_type'] == "bt2":
@@ -75,23 +77,25 @@ def getid(name):
 '''
 create Echarts file
 '''
-def create_echarts(gauge, funnel, bar_1, bar_2):
+def create_echarts(gauge, funnel, bar_1, bar_2, pie):
     page = Page()
     
     style = Style(
+        title_top='#fff',
         title_pos='center',
-        width=800,
-        height=500,
-        background_color='#fff')    
+        width=1300,
+        height=600)
+        #background_color='#404a59')    
 
-    scatter = Scatter()
+    scatter = Scatter(**style.init_style)
     v1, v2 = scatter.draw("data/welcome.png")
     scatter.add("Welcome", v1, v2, is_random=True)
     page.add(scatter)
     
     charts = Gauge("Student Rank", **style.init_style)
     charts.add("", "Rank in Faculty", gauge[0], scale_range=[0, gauge[1]], 
-               is_legend_show=True)
+               is_legend_show=True,
+               is_random=True)
     page.add(charts)
     
     charts = Funnel("Student's consume infomation", **style.init_style)
@@ -99,6 +103,13 @@ def create_echarts(gauge, funnel, bar_1, bar_2):
                label_pos='outside', legend_pos='left',
                legend_orient='vertical',
                is_random=True)
+    page.add(charts)
+    
+    charts = Pie("Student's consume infomation", **style.init_style)
+    charts.add("Ways", funnel[0], funnel[1],  is_random=True,
+            radius=[15, 70], rosetype='radius', is_label_show=True, 
+            legend_orient='vertical',
+            legend_pos='left')
     page.add(charts)
 
     charts = Bar("Student's consume infomation", **style.init_style)
@@ -111,16 +122,18 @@ def create_echarts(gauge, funnel, bar_1, bar_2):
                )
     page.add(charts)    
     
-    charts = Line("Student's consume infomation")
+    charts = Line("Student's consume infomation", **style.init_style)
     charts.add("Ways", funnel[0], funnel[1], 
              mark_point=["average", "max", "min"],
          #mark_point_textcolor='#171717',
          #line_color='#EE9A49',
+         is_label_show=True, 
+         legend_pos='left',
          line_width='3',
          line_type='solid',
          is_random=True)
     page.add(charts)
-
+    
     attr = [month[0] for month in bar_1]
     values = [value[1] for value in bar_1]
     charts = Bar("Studeng's consume monthly", "every month", **style.init_style)
@@ -135,8 +148,8 @@ def create_echarts(gauge, funnel, bar_1, bar_2):
                mark_line=["average"],
                is_random=True)
     page.add(charts)
-    
-    timeline = Timeline(is_auto_play=True, timeline_bottom=0)
+
+    timeline = Timeline(is_auto_play=True, timeline_bottom=0,width=1300,height=600)
     for month in bar_2:
         title =  'month ' + str(month[0])
         each_labels, each_values = change2.separate(month[1])
@@ -146,14 +159,18 @@ def create_echarts(gauge, funnel, bar_1, bar_2):
                 legend_pos='left',
                 legend_orient='vertical',
                 is_random=True)
-        timeline.add(bar, title)
-        page.add(timeline)
-        '''
-        line = Line()
-        line.add("Every month details", each_labels, each_values)
-        page.add(line)
-        '''
+        timeline.add(bar, 'month'+str(month[0]))
+    page.add(timeline)
+
+    charts = Pie("Books readed infomation", **style.init_style)
+    charts.add("", pie[0], pie[1], radius=[40, 75], label_text_color=None,
+        is_label_show=True, legend_orient='vertical',is_legend_show=True,
+        legend_pos='left')
+    page.add(charts)    
     
+    
+
+         
     return page
 '''
     charts = Pie("pie chart", "test pie")
