@@ -139,23 +139,11 @@ def all_month(stu_id):
                         pay_sum[consume_name] += float(info[5])
                     else:
                         pay_sum[consume_name] = float(info[5])
-        labels, values = separate(pay_sum)
+        labels, values = change2.separate(pay_sum)
         #values = change2.change(values)#change format items in values
     return [labels, values]
 
-'''
-parameter: a dict
-func: separate a dict into tow list
-return tow list which are labels_list and values_list
-'''
-def separate(dic):
-    labels = []#define labels with list
-    values = []#define values with list
-    for label, value in dic.iteritems():
-        labels.append(label)
-        values.append(value)
-    values = change2.change(values)
-    return labels, values
+
 
 '''
 parameter student's id
@@ -177,7 +165,7 @@ return a list like this:
 def month_sum(stu_id):
     pre_list = each_month(stu_id)
     for month in pre_list:
-        label, value = separate(month[1])
+        label, value = change2.separate(month[1])
         month[1] = round(sum(value), 2)
     return pre_list
 

@@ -17,3 +17,16 @@ def change(values):
         new_values.append(new_value)
     return new_values
     
+'''
+parameter: a dict
+func: separate a dict into tow list
+return tow list which are labels_list and values_list
+'''
+def separate(dic):
+    labels = []#define labels with list
+    values = []#define values with list
+    for label, value in dic.iteritems():
+        labels.append(label)
+        values.append(value)
+    values = change(values)
+    return labels, values

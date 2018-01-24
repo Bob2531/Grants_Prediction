@@ -1,8 +1,8 @@
 import web  
 import sys
 sys.path.append(r'get_data/')
-import score, card
-from pyecharts import Page, Timeline, Style, Gauge, Funnel, Bar, Line
+import score, card, change2
+from pyecharts import Page, Timeline, Style, Scatter, Gauge, Funnel, Bar, Line
 
 urls = (  
     '/index', 'index',  
@@ -83,8 +83,13 @@ def create_echarts(gauge, funnel, bar_1, bar_2):
         width=800,
         height=500,
         background_color='#fff')    
+
+    scatter = Scatter()
+    v1, v2 = scatter.draw("data/welcome.png")
+    scatter.add("Welcome", v1, v2, is_random=True)
+    page.add(scatter)
     
-    charts  = Gauge("Student Rank", **style.init_style)
+    charts = Gauge("Student Rank", **style.init_style)
     charts.add("", "Rank in Faculty", gauge[0], scale_range=[0, gauge[1]], 
                is_legend_show=True)
     page.add(charts)
@@ -92,7 +97,8 @@ def create_echarts(gauge, funnel, bar_1, bar_2):
     charts = Funnel("Student's consume infomation", **style.init_style)
     charts.add("Ways", funnel[0], funnel[1], is_label_show=True, 
                label_pos='outside', legend_pos='left',
-               legend_orient='vertical')
+               legend_orient='vertical',
+               is_random=True)
     page.add(charts)
 
     charts = Bar("Student's consume infomation", **style.init_style)
@@ -100,17 +106,19 @@ def create_echarts(gauge, funnel, bar_1, bar_2):
                is_label_show=True, 
                legend_pos='left',
                legend_orient='vertical',
-               mark_point=["max"]
+               mark_point=["max"],
+               is_random=True
                )
     page.add(charts)    
     
     charts = Line("Student's consume infomation")
     charts.add("Ways", funnel[0], funnel[1], 
              mark_point=["average", "max", "min"],
-         mark_point_textcolor='#171717',
-         line_color='#EE9A49',
+         #mark_point_textcolor='#171717',
+         #line_color='#EE9A49',
          line_width='3',
-         line_type='solid')
+         line_type='solid',
+         is_random=True)
     page.add(charts)
 
     attr = [month[0] for month in bar_1]
@@ -122,11 +130,29 @@ def create_echarts(gauge, funnel, bar_1, bar_2):
                is_datazoom_show=True,
                datazoom_type='both',
                legend_pos='left',
+               legend_orient='vertical',
                mark_point=["max", "min"],
-               mark_line=["average"])
+               mark_line=["average"],
+               is_random=True)
     page.add(charts)
     
-    
+    timeline = Timeline(is_auto_play=True, timeline_bottom=0)
+    for month in bar_2:
+        title =  'month ' + str(month[0])
+        each_labels, each_values = change2.separate(month[1])
+        bar = Bar("Every month ways", "every month", **style.init_style)
+        bar.add("month consume", each_labels, each_values, 
+                is_label_show=True, 
+                legend_pos='left',
+                legend_orient='vertical',
+                is_random=True)
+        timeline.add(bar, title)
+        page.add(timeline)
+        '''
+        line = Line()
+        line.add("Every month details", each_labels, each_values)
+        page.add(line)
+        '''
     
     return page
 '''
