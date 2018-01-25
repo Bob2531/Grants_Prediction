@@ -142,9 +142,7 @@ def all_month(stu_id):
         labels, values = change2.separate(pay_sum)
         #values = change2.change(values)#change format items in values
     return [labels, values]
-
-
-
+    
 '''
 parameter student's id
 func: get the monthly sum of consume
