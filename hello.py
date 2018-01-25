@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 import web  
 import sys
 sys.path.append(r'get_data/')
-import score, card, change2, borrow
-from pyecharts import Page, Timeline, Style, Scatter, Gauge, Funnel, Bar, Line, Pie
+import score, card, change2, borrow, library
+from pyecharts import Page, Timeline, Style, Scatter, Gauge, \
+                      Funnel, Bar, Line, Pie, Polar
 
 urls = (  
     '/index', 'index',  
@@ -39,15 +41,17 @@ class blog:
                 bar_12month = card.month_sum(stu_id)
                 bar_eachmonth = card.each_month(stu_id)
                 pie = borrow.bookname(stu_id)
+                polar = library.librarytime(stu_id)
                 print "------------------"
-                print guage ,funnel, bar_12month, bar_eachmonth, pie
+                print guage ,funnel, bar_12month, bar_eachmonth, pie, polar
                 print "------------------"
                 #create Echarts file func
                 create_echarts(guage, 
                                funnel, 
                                bar_12month,
                                bar_eachmonth,
-                               pie).render()
+                               pie,
+                               polar).render()
 
                 return getid(stu_id)
             elif data['bt_type'] == "bt2":
@@ -77,7 +81,7 @@ def getid(name):
 '''
 create Echarts file
 '''
-def create_echarts(gauge, funnel, bar_1, bar_2, pie):
+def create_echarts(gauge, funnel, bar_1, bar_2, pie, polar):
     page = Page()
     
     style = Style(
@@ -151,7 +155,7 @@ def create_echarts(gauge, funnel, bar_1, bar_2, pie):
 
     timeline = Timeline(is_auto_play=True, timeline_bottom=0,width=1300,height=600)
     for month in bar_2:
-        title =  'month ' + str(month[0])
+        #title =  'month ' + str(month[0])
         each_labels, each_values = change2.separate(month[1])
         bar = Bar("Every month ways", "every month", **style.init_style)
         bar.add("month consume", each_labels, each_values, 
@@ -162,15 +166,19 @@ def create_echarts(gauge, funnel, bar_1, bar_2, pie):
         timeline.add(bar, 'month'+str(month[0]))
     page.add(timeline)
 
+    po = [i for i in polar[1]]
+    pi = [j for j in polar[0]]
+    charts = Polar("Times of goto the Library","2013.9 ~ 2014.8", **style.init_style)
+    charts.add("", po, radius_data=pi,
+          type='barRadius', is_random=True)
+    page.add(charts)
+
     charts = Pie("Books readed infomation", **style.init_style)
     charts.add("", pie[0], pie[1], radius=[40, 75], label_text_color=None,
         is_label_show=True, legend_orient='vertical',is_legend_show=True,
         legend_pos='left')
     page.add(charts)    
-    
-    
-
-         
+        
     return page
 '''
     charts = Pie("pie chart", "test pie")
