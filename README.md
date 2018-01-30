@@ -8,7 +8,7 @@
 
 	>data
 	>>borrow\_train_invert.txt 按学号分组,得到每个学号借阅图书的信息
-
+	>>
 	>>borrow\_train.txt 每个学号借阅图书信息的原文件
 	>>
 	>>library\_train.txt 每个学号的图书馆门禁记录
@@ -24,22 +24,22 @@
 	>>>9.csv
 	>>>22.csv
 	>>>...
-
+	>>>
 	>get\_data
 	>>borrow.py 得到学生借阅书籍数据
-	
+	>>
 	>>card.py 得到学生消费数据
-	
+	>>
 	>>change2.py 处理数据格式
-	
+	>>
 	>>createStudentForms.py 处理原数据相关代码
-	
+	>>
 	>>library.py 统计学生浏览图书馆次数数据
-	
+	>>
 	>> probability.py
-	
+	>>
 	>>readFromFile.py 读取文件
-	
+	>>
 	>>score.py 得到学生成绩数据
 
 2. **get_data** : get_data文件夹下存放实现提取可视化信息的执行代码.
