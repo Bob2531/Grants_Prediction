@@ -13,7 +13,9 @@ searching how many times does this student go to the library in 2013.9.1~2014.8.
 return a list : [ months, times ]
 '''
 def librarytime(stu_id):
-    filepath = 'data/library_train.txt'
+    lib_train = 'data/train/library_train.txt'
+    lib_test = 'data/test/library_final_test.txt'
+    filepath = lib_test
     lines = readFromFile.readLines(filepath)
     librarytimes = {}
     for line in lines:

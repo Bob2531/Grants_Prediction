@@ -11,7 +11,10 @@ get book_name and numbers with dict
 and return label(book's name) , value(book's number)
 '''
 def bookname(stu_id):
-    with open('data/borrow_train_invert.txt', 'r') as f:
+    borrow_train = 'data/train/borrow_train_invert.txt'
+    borrow_test = 'data/test/borrow_final_test_invert.txt'
+    filename = borrow_test
+    with open(filename, 'r') as f:
         lines = f.readlines()
         
     book_name = {}

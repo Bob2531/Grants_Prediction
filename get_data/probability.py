@@ -11,7 +11,9 @@ seaching the prediction with stu_id in probability.txt
 return the float prediction value
 '''
 def prediction(stu_id):
-    path = 'data/probability.txt'
+    pro_train = 'data/train/result.csv'
+    pro_test = 'data/test/probability.csv'
+    path = pro_test
     lines = readFromFile.readLines(path)
     for line in lines:
         s_id = int(line.split(',')[0])
